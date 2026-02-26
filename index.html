@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Server Express 2022 · Configuração</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f0f4f8 0%, #e9eef3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            color: #1e293b;
+        }
+
+        .setup-card {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 32, 64, 0.25), 
+                        0 2px 10px 0 rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: rgba(255,255,255,0.6);
+            padding: 0.8rem 2rem 0.8rem 1.5rem;
+            border-radius: 60px;
+            box-shadow: 0 6px 14px rgba(0,60,120,0.08);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+
+        .sql-logo-badge {
+            background: #1e2b3a;
+            border-radius: 40px;
+            padding: 0.5rem 0.9rem;
+            box-shadow: 0 8px 12px -6px rgba(0,90,156,0.3);
+        }
+
+        .sql-logo-badge i {
+            font-size: 2rem;
+            color: #e6f0ff;
+            filter: drop-shadow(0 2px 4px #0078d4);
+        }
+
+        .logo-text h1 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #0b2a41, #1b4f7a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .logo-text .version {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #2c5779;
+            background: rgba(0,120,212,0.12);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 0.2rem;
+        }
+
+        .badge-2022 {
+            background: #0078d4;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            margin-left: auto;
+            box-shadow: 0 10px 15px -6px #0078d4a0;
+            white-space: nowrap;
+            border: 1px solid #ffffff70;
+        }
+
+        .hero-image {
+            background: linear-gradient(112deg, #1b344b 0%, #132b3f 100%);
+            border-radius: 2.2rem;
+            padding: 2rem 2.2rem;
+            margin-bottom: 2.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 20px 30px -15px #001e3c;
+            border: 1px solid #2d557a;
+        }
+
+        .hero-caption {
+            color: white;
+            max-width: 420px;
+        }
+
+        .hero-caption h2 {
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-caption p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .setup-steps-mini {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .step-chip {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #f0f9ff;
+        }
+
+        .step-chip i {
+            margin-right: 8px;
+            color: #8cb3d9;
+        }
+
+        .image-wrapper {
+            background: #10344e;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem 0.8rem 1.5rem;
+            box-shadow: 0 20px 30px -10px black;
+            border: 1px solid #3d6b92;
+        }
+
+        .image-wrapper i {
+            font-size: 6rem;
+            color: #c3e1ff;
+            filter: drop-shadow(0 8px 10px #00000050);
+        }
+
+        .image-wrapper span {
+            display: block;
+            color: #bfd9f0;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-top: -0.5rem;
+        }
+
+        .config-panel {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .config-panel {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+            .hero-image {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.8rem;
+            }
+            .badge-2022 {
+                margin-left: 0;
+            }
+            .header {
+                flex-direction: column;
+                align-items: start;
+            }
+        }
+
+        .guide-section {
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 1.8rem 1.8rem;
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: 0 10px 20px -10px rgba(0,30,60,0.1);
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            color: #0d2f4b;
+            border-bottom: 2px solid rgba(0, 90, 156, 0.2);
+            padding-bottom: 0.7rem;
+        }
+
+        .section-title i {
+            color: #0078d4;
+            font-size: 1.5rem;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            background: rgba(255,255,255,0.35);
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        .checklist li:hover {
+            background: white;
+            box-shadow: 0 8px 18px -12px #0078d4;
+        }
+
+        .checklist .status {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0078d4;
+            box-shadow: 0 2px 8px rgba(0,60,130,0.2);
+            flex-shrink: 0;
+        }
+
+        .checklist .item-text {
+            flex: 1;
+        }
+
+        .item-desc {
+            font-size: 0.85rem;
+            color: #325b82;
+            margin-top: 0.2rem;
+            font-weight: 400;
+        }
+
+        .sql-image-showcase {
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 45, 75, 0.05);
+            border-radius: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .sql-image-showcase .img-header {
+            background: #082433;
+            padding: 1.2rem 1.8rem;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .sql-image-showcase .img-header i {
+            font-size: 1.6rem;
+            color: #9ac7ff;
+        }
+
+        .art-board {
+            background: radial-gradient(circle at 0% 30%, #1c3f5c, #0b1f2f);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            text-align: center;
+            border-bottom: 3px solid #2d678e;
+        }
+
+        .art-board .main-icon {
+            font-size: 5rem;
+            color: #e1f0ff;
+            filter: drop-shadow(0 8px 12px #00000060);
+        }
+
+        .art-board .instance-badge {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 0.6rem 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: white;
+            border: 1px solid #7bb0d9;
+            box-shadow: 0 10px 20px -5px black;
+        }
+
+        .art-board .instance-badge i {
+            margin: 0 0.4rem;
+            color: #fedb5f;
+        }
+
+        .server-details {
+            background: rgba(255,255,255,0.75);
+            padding: 1.5rem;
+            border-radius: 1.8rem 1.8rem 2rem 2rem;
+            margin: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .param-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0.3rem;
+            border-bottom: 1px dashed #b8cfec;
+            font-size: 0.95rem;
+        }
+
+        .param-row .label {
+            font-weight: 600;
+            color: #1a4164;
+        }
+
+        .param-row .value {
+            font-weight: 500;
+            background: #ebf3fa;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+        }
+
+        .action-bar {
+            margin-top: 2.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 12px 20px -15px #004578;
+            border: 1px solid rgba(0,120,212,0.3);
+            cursor: default;
+            font-size: 0.95rem;
+            color: #1e405e;
+            transition: 0.1s ease;
+        }
+
+        .btn-primary {
+            background: #004578;
+            color: white;
+            border: 1px solid #4794d3;
+            box-shadow: 0 12px 20px -15px #00264d;
+        }
+
+        .btn i {
+            font-size: 1.1rem;
+        }
+
+        .btn-primary i {
+            color: #c7e2ff;
+        }
+
+        .footnote {
+            margin-top: 2rem;
+            text-align: center;
+            color: #4c6c87;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0,68,128,0.1);
+            padding-top: 1.2rem;
+        }
+
+        .footnote i {
+            color: #0078d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-card">
+        <!-- cabeçalho com imagem SQL Express -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="sql-logo-badge">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>SQL Server Express</h1>
+                    <span class="version"><i class="fa-regular fa-tag"></i> 2022 (configuração)</span>
+                </div>
+            </div>
+            <div class="badge-2022">
+                <i class="fa-regular fa-calendar"></i> 2022 • LocalDB
+            </div>
+        </div>
+
+        <!-- Bloco principal com a imagem de destaque do SQL Express -->
+        <div class="hero-image">
+            <div class="hero-caption">
+                <h2><i class="fa-solid fa-gear" style="font-size: 1.8rem;"></i> Configuração inicial</h2>
+                <p>Instância do SQL Server Express 2022 pronta para ajustes. Verifique parâmetros, serviços e ferramentas.</p>
+                <div class="setup-steps-mini">
+                    <span class="step-chip"><i class="fa-regular fa-circle-check"></i> Instalação</span>
+                    <span class="step-chip"><i class="fa-regular fa-keyboard"></i> Autenticação</span>
+                    <span class="step-chip"><i class="fa-regular fa-folder-open"></i> Arquivos</span>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <!-- imagem simbólica do SQL Express: logotipo + ícone -->
+                <i class="fas fa-server"></i>
+                <i class="fas fa-database" style="font-size: 3rem; margin-left: 0.5rem; color:#b8dafe;"></i>
+                <span>SQL Express 2022</span>
+            </div>
+        </div>
+
+        <!-- painel de configuração dividido em duas colunas -->
+        <div class="config-panel">
+            <!-- coluna esquerda: checklist e passos de configuração -->
+            <div class="guide-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> 
+                    <span>Etapas de configuração</span>
+                </div>
+                <ul class="checklist">
+                    <li>
+                        <span class="status"><i class="fa-regular fa-circle-check"></i></span>
+                        <span class="item-text">Serviço do SQL Server (MSSQL$SQLEXPRESS)
+                            <div class="item-desc">em execução · modo automático</div>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="status"><i class="fa-regular fa-circle-check"></i></span>
+                        <span class="item-text">TCP/IP habilitado 
+                            <div class="item-desc">porta 1433 (dinâmica desabilitada)</div>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="status"><i class="fa-regular fa-circle"></i></span>
+                        <span class="item-text">Autenticação modo misto
+                            <div class="item-desc">definir senha SA · usuário Windows</div>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="status"><i class="fa-regular fa-circle"></i></span>
+                        <span class="item-text">Firewall – regra de entrada
+                            <div class="item-desc">liberar porta 1433 (opcional rede)</div>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="status"><i class="fa-regular fa-circle-check"></i></span>
+                        <span class="item-text">SQL Server Browser
+                            <div class="item-desc">iniciado (instâncias nomeadas)</div>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="status"><i class="fa-regular fa-circle"></i></span>
+                        <span class="item-text">Backup e diretórios de dados
+                            <div class="item-desc">definir pastas padrão</div>
+                        </span>
+                    </li>
+                </ul>
+                <div style="margin-top: 1.4rem; background: #e4eff9; border-radius: 50px; padding: 0.7rem 1.2rem;">
+                    <i class="fa-regular fa-lightbulb" style="color:#0078d4;"></i> 
+                    <span style="font-weight: 500;">Use o SQL Server Configuration Manager para ajustes finos.</span>
+                </div>
+            </div>
+
+            <!-- coluna direita: imagem moderna do SQL Express + dados da instância -->
+            <div class="sql-image-showcase">
+                <div class="img-header">
+                    <i class="fa-solid fa-chart-pie"></i> 
+                    <span>Visão da instância (local)</span>
+                </div>
+                <!-- Área da imagem destacada (SQL Express artwork) -->
+                <div class="art-board">
+                    <i class="fas fa-database main-icon"></i>
+                    <div class="instance-badge">
+                        <i class="fa-regular fa-circle"></i> SQLEXPRESS <i class="fa-regular fa-circle"></i>
+                    </div>
+                    <i class="fas fa-cloud main-icon" style="font-size:3.5rem; opacity:0.7;"></i>
+                </div>
+                <div class="server-details">
+                    <div class="param-row">
+                        <span class="label"><i class="fa-regular fa-folder"></i> Nome da instância</span>
+                        <span class="value">.\SQLEXPRESS</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="label"><i class="fa-regular fa-id-card"></i> Versão</span>
+                        <span class="value">2022 (16.0.1000.6)</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="label"><i class="fa-regular fa-window-maximize"></i> Autenticação</span>
+                        <span class="value">Windows / SQL Server</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="label"><i class="fa-regular fa-memory"></i> Memória máx.</span>
+                        <span class="value">2048 MB (Express)</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="label"><i class="fa-regular fa-hard-drive"></i> Banco de dados</span>
+                        <span class="value">model, msdb, master</span>
+                    </div>
+                </div>
+                <!-- opções rápidas de configuração -->
+                <div style="display: flex; justify-content: space-around; padding: 0.8rem 1rem 1.2rem;">
+                    <span style="background: #002b4b; color: white; border-radius: 30px; padding: 0.4rem 1.2rem;"><i class="fa-regular fa-key"></i> SA</span>
+                    <span style="background: #d7e7f7; border-radius: 30px; padding: 0.4rem 1.2rem;"><i class="fa-regular fa-network"></i> 1433</span>
+                    <span style="background: #d7e7f7; border-radius: 30px; padding: 0.4rem 1.2rem;"><i class="fa-regular fa-clock"></i> Always On</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- barra de ações (ilustrativa) -->
+        <div class="action-bar">
+            <div class="btn">
+                <i class="fa-regular fa-floppy-disk"></i> Aplicar configurações (simulado)
+            </div>
+            <div class="btn btn-primary">
+                <i class="fa-regular fa-arrow-right-to-bracket"></i> SSMS · conectar
+            </div>
+            <div class="btn">
+                <i class="fa-regular fa-note-sticky"></i> Script de configuração
+            </div>
+        </div>
+
+        <!-- rodapé com lembretes e links fictícios -->
+        <div class="footnote">
+            <i class="fa-regular fa-circle-info"></i> Esta é uma interface de referência rápida para o SQL Server Express 2022. 
+            Utilize o instalador oficial e o SQL Server Management Studio (SSMS) para configuração real.
+        </div>
+    </div>
+
+    <!-- pequeno elemento decorativo (apenas visual) -->
+    <div style="position: fixed; bottom: 20px; right: 20px; opacity:0.2; pointer-events: none;">
+        <i class="fas fa-database" style="font-size: 4rem; color: #002b4b;"></i>
+    </div>
+</body>
+</html>
